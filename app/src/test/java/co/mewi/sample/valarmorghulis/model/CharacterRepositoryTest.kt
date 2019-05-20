@@ -39,9 +39,9 @@ class CharacterRepositoryTest {
 
         // Act
         val countDownLatch = CountDownLatch(1)
-        var characterList: List<CharacterRepository.Character>? = null
-        CharacterRepository().getCharacterList(object : CharacterRepository.Callback {
-            override fun onSuccess(characters: List<CharacterRepository.Character>) {
+        var characterList: List<Character>? = null
+        CharacterRepository().getCharacterList(object : ICharacterRepository.Callback {
+            override fun onSuccess(characters: List<Character>) {
                 characterList = characters
                 countDownLatch.countDown()
             }
@@ -71,8 +71,8 @@ class CharacterRepositoryTest {
         // Act
         val countDownLatch = CountDownLatch(1)
         var message: String? = null
-        CharacterRepository().getCharacterList(object : CharacterRepository.Callback {
-            override fun onSuccess(characters: List<CharacterRepository.Character>) {
+        CharacterRepository().getCharacterList(object : ICharacterRepository.Callback {
+            override fun onSuccess(characters: List<Character>) {
                 fail()
             }
 
@@ -107,8 +107,8 @@ class CharacterRepositoryTest {
         // first request which caches the successful response
         var firstRequestSuccess: Boolean = false
         val countDownLatch = CountDownLatch(1)
-        characterRepository.getCharacterList(object : CharacterRepository.Callback {
-            override fun onSuccess(characters: List<CharacterRepository.Character>) {
+        characterRepository.getCharacterList(object : ICharacterRepository.Callback {
+            override fun onSuccess(characters: List<Character>) {
                 firstRequestSuccess = true
                 countDownLatch.countDown()
             }
@@ -121,10 +121,10 @@ class CharacterRepositoryTest {
         countDownLatch.await()
         // second request that fails but uses the cache
         var secondRequestSuccess: Boolean = false
-        var cachedList: List<CharacterRepository.Character>? = null
+        var cachedList: List<Character>? = null
         val countDownLatch2 = CountDownLatch(2)
-        characterRepository.getCharacterList(object : CharacterRepository.Callback {
-            override fun onSuccess(characters: List<CharacterRepository.Character>) {
+        characterRepository.getCharacterList(object : ICharacterRepository.Callback {
+            override fun onSuccess(characters: List<Character>) {
                 cachedList = characters
                 secondRequestSuccess = true
                 countDownLatch2.countDown()

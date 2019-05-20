@@ -9,7 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
-class CharacterRepository {
+class CharacterRepository : ICharacterRepository {
 
     companion object {
         const val ERROR_DEFAULT = "Something has gone wrong"
@@ -20,9 +20,12 @@ class CharacterRepository {
 
     private var cachedList: List<Character>? = null
 
-    fun getCharacterList(callback: Callback?) {
-        if (!cachedList.isNullOrEmpty()) {
+    override fun getCharacterList(callback: ICharacterRepository.Callback?, useCache: Boolean) {
+        if (cachedList != null && cachedList?.size != 0) {
             callback?.onSuccess(cachedList!!)
+            if (useCache) {
+                return
+            }
         }
 
         getNetworkService()
@@ -57,7 +60,15 @@ class CharacterRepository {
         val celebrityNames = response.celebrities.keys
         for (name in celebrityNames) {
             val celebrityInfo = response.celebrities[name]
-            list.add(Character(name, celebrityInfo!!.age, celebrityInfo.popularity, celebrityInfo.photo))
+            list.add(
+                Character(
+                    name,
+                    celebrityInfo!!.height,
+                    celebrityInfo!!.age,
+                    celebrityInfo!!.popularity,
+                    celebrityInfo!!.photo
+                )
+            )
         }
         return list
     }
@@ -70,11 +81,4 @@ class CharacterRepository {
         return retrofit.create(CharacterService::class.java)
     }
 
-    data class Character(val name: String, val age: Int, val popularity: Int, val photo: String)
-
-    interface Callback {
-        fun onSuccess(characters: List<Character>)
-
-        fun onFailure(errorMessage: String?)
-    }
 }

@@ -25,8 +25,9 @@ class SampleResponses {
             "\t}\n" +
             "}"
 
-    val firstItemObject = CharacterRepository.Character(
+    val firstItemObject = Character(
         "Cersie",
+        "170",
         30,
         70,
         "https://upload.wikimedia.org/wikipedia/en/thumb/f/f0/Jon_Snow-Kit_Harington.jpg/220px-Jon_Snow-Kit_Harington.jpg"

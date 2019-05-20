@@ -14,6 +14,12 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    compileOptions {
+        targetCompatibility = "8"
+        sourceCompatibility = "8"
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -33,8 +39,10 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:3.14.2")
     implementation 'com.google.code.gson:gson:2.8.5'
 
+
     testImplementation 'junit:junit:4.12'
     testImplementation 'com.squareup.okhttp3:mockwebserver:3.14.2'
+    testImplementation 'android.arch.core:core-testing:1.1.1'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
