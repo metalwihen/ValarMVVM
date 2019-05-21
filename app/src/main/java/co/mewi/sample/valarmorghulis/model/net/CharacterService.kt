@@ -5,7 +5,7 @@ import retrofit2.http.GET
 
 interface CharacterService {
 
-    @GET("/bins/6e60g")
+    @GET("/bins/vgffa")
     fun list(): Call<CharacterResponse>
 
 }
