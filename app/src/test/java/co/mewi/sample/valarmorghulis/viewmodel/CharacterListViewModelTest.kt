@@ -35,7 +35,7 @@ class CharacterListViewModelTest {
 
         // Assert
         assertEquals(CharacterListViewModel.PageState.CONTENT, viewModel.pageState.value)
-        assertEquals(characters, viewModel.characterList.value)
+        assertEquals(characters.size, viewModel.characterList.value!!.size)
     }
 
     @Test
