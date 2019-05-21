@@ -1,3 +1,20 @@
 <resources>
-    <string name="app_name">ValarMorghulis</string>
+    <string name="app_name">Valar Morghulis</string>
+
+    <string name="state_button_label">RETRY</string>
+    <string name="state_loading">Almost there! Loading your content…</string>
+    <string name="state_error">Oops… Something has gone wrong!</string>
+    <string name="state_empty">Gosh. There\'s nothing to show!</string>
+
+    <string-array name="sort_by_options">
+        <item>Popularity</item>
+        <item>Height</item>
+        <item>Age</item>
+    </string-array>
+
+    <string-array name="sort_order_options">
+        <item>Asc</item>
+        <item>Desc</item>
+    </string-array>
+
 </resources>

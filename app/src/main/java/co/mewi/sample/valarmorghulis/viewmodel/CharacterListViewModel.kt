@@ -12,23 +12,15 @@ class CharacterListViewModel(private val characterRepository: ICharacterReposito
     val characterList = MutableLiveData<List<Character>>()
     val pageState = MutableLiveData<PageState>()
 
-    fun initPage() {
-        pageState.value = PageState.LOADING
-        characterRepository.getCharacterList(
-            object : ICharacterRepository.Callback {
-                override fun onSuccess(characters: List<Character>) {
-                    if (characters.size == 0) {
-                        pageState.value = PageState.EMPTY
-                    } else {
-                        pageState.value = PageState.CONTENT
-                        characterList.value = characters
-                    }
-                }
+    private var selectedSortBy = SortBy.POPULARITY
+    private var selectedIsAsc = true
 
-                override fun onFailure(errorMessage: String?) {
-                    pageState.value = PageState.ERROR
-                }
-            })
+    fun initPage() {
+        loadPage()
+    }
+
+    fun reloadPage() {
+        loadPage()
     }
 
     fun updateSortSettings(sortBy: SortBy, isAsc: Boolean) {
@@ -38,6 +30,8 @@ class CharacterListViewModel(private val characterRepository: ICharacterReposito
     }
 
     private fun sort(originalList: List<Character>, sortBy: SortBy, isAsc: Boolean): List<Character> {
+        selectedSortBy = sortBy
+        selectedIsAsc = isAsc
         var list = ArrayList<Character>(originalList)
         Collections.sort(list, object : Comparator<Character> {
             override fun compare(o1: Character?, o2: Character?): Int {
@@ -77,6 +71,25 @@ class CharacterListViewModel(private val characterRepository: ICharacterReposito
             }
         })
         return list
+    }
+
+    private fun loadPage() {
+        pageState.value = PageState.LOADING
+        characterRepository.getCharacterList(
+            object : ICharacterRepository.Callback {
+                override fun onSuccess(characters: List<Character>) {
+                    if (characters.isEmpty()) {
+                        pageState.value = PageState.EMPTY
+                    } else {
+                        pageState.value = PageState.CONTENT
+                        characterList.value = sort(characters, selectedSortBy, selectedIsAsc)
+                    }
+                }
+
+                override fun onFailure(errorMessage: String?) {
+                    pageState.value = PageState.ERROR
+                }
+            })
     }
 
     enum class PageState {
