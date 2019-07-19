@@ -1,6 +1,5 @@
 package co.mewi.sample.valarmorghulis.model
 
-import co.mewi.sample.valarmorghulis.Injector
 import co.mewi.sample.valarmorghulis.model.CharacterRepository.Companion.ERROR_INVALID_RESPONSE
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.fail
@@ -19,6 +18,7 @@ class CharacterRepositoryTest {
     @Before
     fun setup() {
         server = MockWebServer()
+
     }
 
     @After
@@ -34,13 +34,12 @@ class CharacterRepositoryTest {
                 .setResponseCode(200)
                 .setBody(sampleResponses.successThreeItemResponse)
         )
-        server.start()
-        Injector.baseUrl = server.url("/bins/6e60g/").toString()
+        server.start(5555)
 
         // Act
         val countDownLatch = CountDownLatch(1)
         var characterList: List<Character>? = null
-        CharacterRepository().getCharacterList(object : ICharacterRepository.Callback {
+        CharacterRepository("http://localhost:5555/").getCharacterList(object : ICharacterRepository.Callback {
             override fun onSuccess(characters: List<Character>) {
                 characterList = characters
                 countDownLatch.countDown()
@@ -65,13 +64,12 @@ class CharacterRepositoryTest {
                 .setResponseCode(404)
                 .setBody(sampleResponses.successThreeItemResponse)
         )
-        server.start()
-        Injector.baseUrl = server.url("/bins/6e60g/").toString()
+        server.start(5555)
 
         // Act
         val countDownLatch = CountDownLatch(1)
         var message: String? = null
-        CharacterRepository().getCharacterList(object : ICharacterRepository.Callback {
+        CharacterRepository("http://localhost:5555/").getCharacterList(object : ICharacterRepository.Callback {
             override fun onSuccess(characters: List<Character>) {
                 fail()
             }
@@ -90,7 +88,7 @@ class CharacterRepositoryTest {
     @Test
     fun testCache() {
         // Arrange
-        val characterRepository = CharacterRepository()
+        val characterRepository = CharacterRepository("http://localhost:5555")
         val success1 = MockResponse()
             .setResponseCode(200)
             .setBody(sampleResponses.successThreeItemResponse)
@@ -100,8 +98,7 @@ class CharacterRepositoryTest {
 
         server.enqueue(success1)
         server.enqueue(fail2)
-        server.start()
-        Injector.baseUrl = server.url("/bins/6e60g/").toString()
+        server.start(5555)
 
         // Act
         // first request which caches the successful response

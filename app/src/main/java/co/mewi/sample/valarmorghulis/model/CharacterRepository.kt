@@ -1,6 +1,5 @@
 package co.mewi.sample.valarmorghulis.model
 
-import co.mewi.sample.valarmorghulis.Injector
 import co.mewi.sample.valarmorghulis.model.net.CharacterResponse
 import co.mewi.sample.valarmorghulis.model.net.CharacterService
 import retrofit2.Call
@@ -9,7 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
-class CharacterRepository : ICharacterRepository {
+class CharacterRepository(val baseUrl: String) : ICharacterRepository {
 
     companion object {
         const val ERROR_DEFAULT = "Something has gone wrong"
@@ -75,7 +74,7 @@ class CharacterRepository : ICharacterRepository {
 
     private fun getNetworkService(): CharacterService {
         val retrofit = Retrofit.Builder()
-            .baseUrl(Injector.baseUrl)
+            .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         return retrofit.create(CharacterService::class.java)

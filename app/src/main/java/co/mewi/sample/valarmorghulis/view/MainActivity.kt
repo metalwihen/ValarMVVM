@@ -5,28 +5,33 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import co.mewi.sample.valarmorghulis.Injector
+import co.mewi.sample.valarmorghulis.MyApp
 import co.mewi.sample.valarmorghulis.R
+import co.mewi.sample.valarmorghulis.model.ICharacterRepository
 import co.mewi.sample.valarmorghulis.viewmodel.CharacterListViewModel
 import co.mewi.sample.valarmorghulis.viewmodel.CharacterListViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.view_state.*
+import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
+
+    var charRepository: ICharacterRepository? = null
+    @Inject set
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupView()
 
+        (applicationContext as MyApp).valarComponent.inject(this)
+
         val viewModel =
-            ViewModelProviders.of(this, CharacterListViewModelFactory(Injector.characterRepository))
+            ViewModelProviders.of(this, CharacterListViewModelFactory(charRepository!!))
                 .get(CharacterListViewModel::class.java)
         viewModel.initPage()
         configureSpinner(viewModel)
